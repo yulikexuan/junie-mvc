@@ -4,4 +4,8 @@
 
 ## Junie Workflows 
 
-### 
+### Guidelines 
+
+1. [JetBrains Spring Boot Guidelines with Explanation](https://github.com/JetBrains/junie-guidelines/blob/main/guidelines/java/spring-boot/guidelines-with-explanations.md)
+
+
