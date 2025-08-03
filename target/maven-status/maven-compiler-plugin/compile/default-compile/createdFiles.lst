@@ -1,0 +1,7 @@
+spring\start\here\juniemvc\domain\model\Beer$BeerBuilder.class
+spring\start\here\juniemvc\domain\model\Beer.class
+spring\start\here\juniemvc\service\BeerServiceImpl.class
+spring\start\here\juniemvc\web\controller\BeerController.class
+spring\start\here\juniemvc\JunieMvcApplication.class
+spring\start\here\juniemvc\repository\BeerRepository.class
+spring\start\here\juniemvc\service\BeerService.class
