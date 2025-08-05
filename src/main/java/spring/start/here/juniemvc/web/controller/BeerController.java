@@ -1,12 +1,13 @@
 package spring.start.here.juniemvc.web.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spring.start.here.juniemvc.domain.model.Beer;
 import spring.start.here.juniemvc.service.BeerService;
-
-import java.util.List;
+import spring.start.here.juniemvc.web.model.BeerDto;
+import spring.start.here.juniemvc.web.model.BeerListDto;
+import spring.start.here.juniemvc.web.model.BeerUpsertDto;
 
 /**
  * REST Controller for Beer operations
@@ -23,13 +24,13 @@ public class BeerController {
 
     /**
      * Create a new beer
-     * @param beer the beer to create
+     * @param beerUpsertDto the beer to create
      * @return the created beer
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Beer createBeer(@RequestBody Beer beer) {
-        return beerService.saveBeer(beer);
+    public BeerDto createBeer(@Valid @RequestBody BeerUpsertDto beerUpsertDto) {
+        return beerService.saveBeer(beerUpsertDto);
     }
 
     /**
@@ -38,30 +39,36 @@ public class BeerController {
      * @return the beer if found, or 404 if not found
      */
     @GetMapping("/{beerId}")
-    public ResponseEntity<Beer> getBeerById(@PathVariable("beerId") Integer beerId) {
+    public ResponseEntity<BeerDto> getBeerById(@PathVariable("beerId") Integer beerId) {
         return beerService.getBeerById(beerId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     /**
-     * Get all beers
-     * @return list of all beers
+     * Get all beers with pagination
+     * @param pageNumber the page number (0-based)
+     * @param pageSize the page size
+     * @return list of all beers with pagination information
      */
     @GetMapping
-    public List<Beer> getAllBeers() {
-        return beerService.getAllBeers();
+    public BeerListDto getAllBeers(
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer pageSize) {
+        return beerService.getAllBeers(pageNumber, pageSize);
     }
 
     /**
      * Update an existing beer
      * @param beerId the beer ID to update
-     * @param beer the updated beer data
+     * @param beerUpsertDto the updated beer data
      * @return the updated beer if found, or 404 if not found
      */
     @PutMapping("/{beerId}")
-    public ResponseEntity<Beer> updateBeer(@PathVariable("beerId") Integer beerId, @RequestBody Beer beer) {
-        return beerService.updateBeer(beerId, beer)
+    public ResponseEntity<BeerDto> updateBeer(
+            @PathVariable("beerId") Integer beerId,
+            @Valid @RequestBody BeerUpsertDto beerUpsertDto) {
+        return beerService.updateBeer(beerId, beerUpsertDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

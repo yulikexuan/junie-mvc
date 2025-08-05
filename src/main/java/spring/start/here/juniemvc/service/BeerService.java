@@ -1,8 +1,9 @@
 package spring.start.here.juniemvc.service;
 
-import spring.start.here.juniemvc.domain.model.Beer;
+import spring.start.here.juniemvc.web.model.BeerDto;
+import spring.start.here.juniemvc.web.model.BeerListDto;
+import spring.start.here.juniemvc.web.model.BeerUpsertDto;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,31 +13,33 @@ public interface BeerService {
 
     /**
      * Save a beer
-     * @param beer the beer to save
+     * @param beerUpsertDto the beer to save
      * @return the saved beer
      */
-    Beer saveBeer(Beer beer);
+    BeerDto saveBeer(BeerUpsertDto beerUpsertDto);
 
     /**
      * Get a beer by ID
      * @param id the beer ID
      * @return the beer if found
      */
-    Optional<Beer> getBeerById(Integer id);
+    Optional<BeerDto> getBeerById(Integer id);
 
     /**
      * Get all beers
-     * @return list of all beers
+     * @param pageNumber the page number (0-based)
+     * @param pageSize the page size
+     * @return list of all beers with pagination
      */
-    List<Beer> getAllBeers();
+    BeerListDto getAllBeers(Integer pageNumber, Integer pageSize);
 
     /**
      * Update an existing beer
      * @param id the beer ID to update
-     * @param beer the updated beer data
+     * @param beerUpsertDto the updated beer data
      * @return the updated beer if found, empty otherwise
      */
-    Optional<Beer> updateBeer(Integer id, Beer beer);
+    Optional<BeerDto> updateBeer(Integer id, BeerUpsertDto beerUpsertDto);
 
     /**
      * Delete a beer by ID

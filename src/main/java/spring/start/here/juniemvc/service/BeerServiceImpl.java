@@ -1,11 +1,18 @@
 package spring.start.here.juniemvc.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spring.start.here.juniemvc.domain.model.Beer;
 import spring.start.here.juniemvc.repository.BeerRepository;
+import spring.start.here.juniemvc.web.mappers.BeerMapper;
+import spring.start.here.juniemvc.web.model.BeerDto;
+import spring.start.here.juniemvc.web.model.BeerListDto;
+import spring.start.here.juniemvc.web.model.BeerUpsertDto;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of BeerService interface
@@ -14,43 +21,67 @@ import java.util.Optional;
 public class BeerServiceImpl implements BeerService {
 
     private final BeerRepository beerRepository;
+    private final BeerMapper beerMapper;
 
-    public BeerServiceImpl(BeerRepository beerRepository) {
+    public BeerServiceImpl(BeerRepository beerRepository, BeerMapper beerMapper) {
         this.beerRepository = beerRepository;
+        this.beerMapper = beerMapper;
     }
 
     @Override
-    public Beer saveBeer(Beer beer) {
-        return beerRepository.save(beer);
+    @Transactional
+    public BeerDto saveBeer(BeerUpsertDto beerUpsertDto) {
+        Beer beer = beerMapper.beerUpsertDtoToBeer(beerUpsertDto);
+        Beer savedBeer = beerRepository.save(beer);
+        return beerMapper.beerToBeerDto(savedBeer);
     }
 
     @Override
-    public Optional<Beer> getBeerById(Integer id) {
-        return beerRepository.findById(id);
+    @Transactional(readOnly = true)
+    public Optional<BeerDto> getBeerById(Integer id) {
+        return beerRepository.findById(id)
+                .map(beerMapper::beerToBeerDto);
     }
 
     @Override
-    public List<Beer> getAllBeers() {
-        return beerRepository.findAll();
+    @Transactional(readOnly = true)
+    public BeerListDto getAllBeers(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(
+                pageNumber != null ? pageNumber : 0,
+                pageSize != null ? pageSize : 25);
+
+        Page<Beer> beerPage = beerRepository.findAll(pageRequest);
+
+        return BeerListDto.builder()
+                .beers(beerPage.getContent().stream()
+                        .map(beerMapper::beerToBeerDto)
+                        .collect(Collectors.toList()))
+                .totalPages(beerPage.getTotalPages())
+                .currentPage(beerPage.getNumber())
+                .totalElements(beerPage.getTotalElements())
+                .build();
     }
 
     @Override
-    public Optional<Beer> updateBeer(Integer id, Beer beer) {
+    @Transactional
+    public Optional<BeerDto> updateBeer(Integer id, BeerUpsertDto beerUpsertDto) {
         return beerRepository.findById(id)
                 .map(existingBeer -> {
                     // Update the existing beer with new values
-                    existingBeer.setBeerName(beer.getBeerName());
-                    existingBeer.setBeerStyle(beer.getBeerStyle());
-                    existingBeer.setUpc(beer.getUpc());
-                    existingBeer.setPrice(beer.getPrice());
-                    existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+                    existingBeer.setBeerName(beerUpsertDto.getBeerName());
+                    existingBeer.setBeerStyle(beerUpsertDto.getBeerStyle());
+                    existingBeer.setUpc(beerUpsertDto.getUpc());
+                    existingBeer.setPrice(beerUpsertDto.getPrice());
+                    existingBeer.setQuantityOnHand(beerUpsertDto.getQuantityOnHand());
 
                     // Save the updated beer
-                    return beerRepository.save(existingBeer);
+                    Beer savedBeer = beerRepository.save(existingBeer);
+                    return beerMapper.beerToBeerDto(savedBeer);
                 });
     }
 
     @Override
+    @Transactional
     public boolean deleteBeer(Integer id) {
         return beerRepository.findById(id)
                 .map(beer -> {

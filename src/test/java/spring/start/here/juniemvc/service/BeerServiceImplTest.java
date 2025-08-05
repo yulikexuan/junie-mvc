@@ -2,102 +2,110 @@ package spring.start.here.juniemvc.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import spring.start.here.juniemvc.domain.model.Beer;
 import spring.start.here.juniemvc.repository.BeerRepository;
+import spring.start.here.juniemvc.web.mappers.BeerMapper;
+import spring.start.here.juniemvc.web.model.BeerDto;
+import spring.start.here.juniemvc.web.model.BeerListDto;
+import spring.start.here.juniemvc.web.model.BeerUpsertDto;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class BeerServiceImplTest {
 
     @Mock
-    private BeerRepository beerRepository;
+    BeerRepository beerRepository;
+
+    @Mock
+    BeerMapper beerMapper;
 
     @InjectMocks
-    private BeerServiceImpl beerService;
+    BeerServiceImpl beerService;
+
+    Beer testBeer;
+    BeerDto testBeerDto;
+    BeerUpsertDto testBeerUpsertDto;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        testBeer = Beer.builder()
+                .id(1)
+                .version(1)
+                .beerName("Test Beer")
+                .beerStyle("IPA")
+                .upc("123456789012")
+                .price(new BigDecimal("12.99"))
+                .quantityOnHand(100)
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+
+        testBeerDto = BeerDto.builder()
+                .id(1)
+                .version(1)
+                .beerName("Test Beer")
+                .beerStyle("IPA")
+                .upc("123456789012")
+                .price(new BigDecimal("12.99"))
+                .quantityOnHand(100)
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+
+        testBeerUpsertDto = BeerUpsertDto.builder()
+                .beerName("Test Beer")
+                .beerStyle("IPA")
+                .upc("123456789012")
+                .price(new BigDecimal("12.99"))
+                .quantityOnHand(100)
+                .build();
     }
 
     @Test
     void testSaveBeer() {
         // Given
-        Beer beerToSave = Beer.builder()
-                .beerName("Test Beer")
-                .beerStyle("IPA")
-                .upc("123456")
-                .price(new BigDecimal("12.99"))
-                .quantityOnHand(100)
-                .build();
-
-        Beer savedBeer = Beer.builder()
-                .id(1)
-                .beerName("Test Beer")
-                .beerStyle("IPA")
-                .upc("123456")
-                .price(new BigDecimal("12.99"))
-                .quantityOnHand(100)
-                .build();
-
-        given(beerRepository.save(any(Beer.class))).willReturn(savedBeer);
+        given(beerMapper.beerUpsertDtoToBeer(any(BeerUpsertDto.class))).willReturn(testBeer);
+        given(beerRepository.save(any(Beer.class))).willReturn(testBeer);
+        given(beerMapper.beerToBeerDto(any(Beer.class))).willReturn(testBeerDto);
 
         // When
-        Beer result = beerService.saveBeer(beerToSave);
+        BeerDto savedBeerDto = beerService.saveBeer(testBeerUpsertDto);
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1);
-        assertThat(result.getBeerName()).isEqualTo("Test Beer");
-        assertThat(result.getBeerStyle()).isEqualTo("IPA");
-        assertThat(result.getUpc()).isEqualTo("123456");
-        assertThat(result.getPrice()).isEqualTo(new BigDecimal("12.99"));
-        assertThat(result.getQuantityOnHand()).isEqualTo(100);
-
-        then(beerRepository).should(times(1)).save(any(Beer.class));
+        assertThat(savedBeerDto).isNotNull();
+        assertThat(savedBeerDto.getId()).isEqualTo(testBeerDto.getId());
+        verify(beerRepository).save(any(Beer.class));
     }
 
     @Test
     void testGetBeerById() {
         // Given
-        Beer beer = Beer.builder()
-                .id(1)
-                .beerName("Test Beer")
-                .beerStyle("IPA")
-                .upc("123456")
-                .price(new BigDecimal("12.99"))
-                .quantityOnHand(100)
-                .build();
-
-        given(beerRepository.findById(1)).willReturn(Optional.of(beer));
+        given(beerRepository.findById(1)).willReturn(Optional.of(testBeer));
+        given(beerMapper.beerToBeerDto(testBeer)).willReturn(testBeerDto);
 
         // When
-        Optional<Beer> result = beerService.getBeerById(1);
+        Optional<BeerDto> foundBeerDto = beerService.getBeerById(1);
 
         // Then
-        assertThat(result).isPresent();
-        Beer fetchedBeer = result.get();
-        assertThat(fetchedBeer.getId()).isEqualTo(1);
-        assertThat(fetchedBeer.getBeerName()).isEqualTo("Test Beer");
-        assertThat(fetchedBeer.getBeerStyle()).isEqualTo("IPA");
-        assertThat(fetchedBeer.getUpc()).isEqualTo("123456");
-        assertThat(fetchedBeer.getPrice()).isEqualTo(new BigDecimal("12.99"));
-        assertThat(fetchedBeer.getQuantityOnHand()).isEqualTo(100);
-
-        then(beerRepository).should(times(1)).findById(1);
+        assertThat(foundBeerDto).isPresent();
+        assertThat(foundBeerDto.get().getId()).isEqualTo(testBeerDto.getId());
     }
 
     @Test
@@ -106,156 +114,85 @@ class BeerServiceImplTest {
         given(beerRepository.findById(1)).willReturn(Optional.empty());
 
         // When
-        Optional<Beer> result = beerService.getBeerById(1);
+        Optional<BeerDto> foundBeerDto = beerService.getBeerById(1);
 
         // Then
-        assertThat(result).isEmpty();
-        then(beerRepository).should(times(1)).findById(1);
+        assertThat(foundBeerDto).isEmpty();
     }
 
     @Test
     void testGetAllBeers() {
         // Given
-        List<Beer> beers = Arrays.asList(
-                Beer.builder()
-                        .id(1)
-                        .beerName("Beer 1")
-                        .beerStyle("IPA")
-                        .upc("123456")
-                        .price(new BigDecimal("12.99"))
-                        .quantityOnHand(100)
-                        .build(),
-                Beer.builder()
-                        .id(2)
-                        .beerName("Beer 2")
-                        .beerStyle("Stout")
-                        .upc("654321")
-                        .price(new BigDecimal("11.99"))
-                        .quantityOnHand(200)
-                        .build()
-        );
-
-        given(beerRepository.findAll()).willReturn(beers);
+        Page<Beer> beerPage = new PageImpl<>(List.of(testBeer));
+        given(beerRepository.findAll(any(PageRequest.class))).willReturn(beerPage);
+        given(beerMapper.beerToBeerDto(testBeer)).willReturn(testBeerDto);
 
         // When
-        List<Beer> result = beerService.getAllBeers();
+        BeerListDto beerListDto = beerService.getAllBeers(0, 10);
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0).getId()).isEqualTo(1);
-        assertThat(result.get(0).getBeerName()).isEqualTo("Beer 1");
-        assertThat(result.get(1).getId()).isEqualTo(2);
-        assertThat(result.get(1).getBeerName()).isEqualTo("Beer 2");
-
-        then(beerRepository).should(times(1)).findAll();
+        assertThat(beerListDto).isNotNull();
+        assertThat(beerListDto.getBeers()).hasSize(1);
+        assertThat(beerListDto.getTotalPages()).isEqualTo(1);
+        assertThat(beerListDto.getCurrentPage()).isEqualTo(0);
+        assertThat(beerListDto.getTotalElements()).isEqualTo(1);
     }
 
     @Test
-    void testGetAllBeersEmpty() {
+    void testGetAllBeersWithDefaultPagination() {
         // Given
-        given(beerRepository.findAll()).willReturn(List.of());
+        Page<Beer> beerPage = new PageImpl<>(List.of(testBeer));
+        given(beerRepository.findAll(any(PageRequest.class))).willReturn(beerPage);
+        given(beerMapper.beerToBeerDto(testBeer)).willReturn(testBeerDto);
 
         // When
-        List<Beer> result = beerService.getAllBeers();
+        BeerListDto beerListDto = beerService.getAllBeers(null, null);
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
-        then(beerRepository).should(times(1)).findAll();
+        assertThat(beerListDto).isNotNull();
+        assertThat(beerListDto.getBeers()).hasSize(1);
+        verify(beerRepository).findAll(any(PageRequest.class));
     }
 
     @Test
-    void testUpdateBeerSuccess() {
+    void testUpdateBeer() {
         // Given
-        Beer existingBeer = Beer.builder()
-                .id(1)
-                .beerName("Original Beer")
-                .beerStyle("IPA")
-                .upc("123456")
-                .price(new BigDecimal("12.99"))
-                .quantityOnHand(100)
-                .build();
-
-        Beer updatedBeerData = Beer.builder()
-                .beerName("Updated Beer")
-                .beerStyle("Stout")
-                .upc("654321")
-                .price(new BigDecimal("14.99"))
-                .quantityOnHand(200)
-                .build();
-
-        Beer savedBeer = Beer.builder()
-                .id(1)
-                .beerName("Updated Beer")
-                .beerStyle("Stout")
-                .upc("654321")
-                .price(new BigDecimal("14.99"))
-                .quantityOnHand(200)
-                .build();
-
-        given(beerRepository.findById(1)).willReturn(Optional.of(existingBeer));
-        given(beerRepository.save(any(Beer.class))).willReturn(savedBeer);
+        given(beerRepository.findById(1)).willReturn(Optional.of(testBeer));
+        given(beerRepository.save(any(Beer.class))).willReturn(testBeer);
+        given(beerMapper.beerToBeerDto(testBeer)).willReturn(testBeerDto);
 
         // When
-        Optional<Beer> result = beerService.updateBeer(1, updatedBeerData);
+        Optional<BeerDto> updatedBeerDto = beerService.updateBeer(1, testBeerUpsertDto);
 
         // Then
-        assertThat(result).isPresent();
-        Beer resultBeer = result.get();
-        assertThat(resultBeer.getId()).isEqualTo(1);
-        assertThat(resultBeer.getBeerName()).isEqualTo("Updated Beer");
-        assertThat(resultBeer.getBeerStyle()).isEqualTo("Stout");
-        assertThat(resultBeer.getUpc()).isEqualTo("654321");
-        assertThat(resultBeer.getPrice()).isEqualTo(new BigDecimal("14.99"));
-        assertThat(resultBeer.getQuantityOnHand()).isEqualTo(200);
-
-        verify(beerRepository).findById(1);
-        verify(beerRepository).save(any(Beer.class));
+        assertThat(updatedBeerDto).isPresent();
+        assertThat(updatedBeerDto.get().getId()).isEqualTo(testBeerDto.getId());
+        verify(beerRepository).save(testBeer);
     }
 
     @Test
     void testUpdateBeerNotFound() {
         // Given
-        Beer updatedBeerData = Beer.builder()
-                .beerName("Updated Beer")
-                .beerStyle("Stout")
-                .upc("654321")
-                .price(new BigDecimal("14.99"))
-                .quantityOnHand(200)
-                .build();
-
         given(beerRepository.findById(1)).willReturn(Optional.empty());
 
         // When
-        Optional<Beer> result = beerService.updateBeer(1, updatedBeerData);
+        Optional<BeerDto> updatedBeerDto = beerService.updateBeer(1, testBeerUpsertDto);
 
         // Then
-        assertThat(result).isEmpty();
-        verify(beerRepository).findById(1);
+        assertThat(updatedBeerDto).isEmpty();
     }
 
     @Test
-    void testDeleteBeerSuccess() {
+    void testDeleteBeer() {
         // Given
-        Beer beerToDelete = Beer.builder()
-                .id(1)
-                .beerName("Beer to Delete")
-                .beerStyle("IPA")
-                .upc("123456")
-                .price(new BigDecimal("12.99"))
-                .quantityOnHand(100)
-                .build();
-
-        given(beerRepository.findById(1)).willReturn(Optional.of(beerToDelete));
+        given(beerRepository.findById(1)).willReturn(Optional.of(testBeer));
 
         // When
         boolean result = beerService.deleteBeer(1);
 
         // Then
         assertThat(result).isTrue();
-        verify(beerRepository).findById(1);
-        verify(beerRepository).delete(beerToDelete);
+        verify(beerRepository).delete(testBeer);
     }
 
     @Test
@@ -268,6 +205,5 @@ class BeerServiceImplTest {
 
         // Then
         assertThat(result).isFalse();
-        verify(beerRepository).findById(1);
     }
 }
