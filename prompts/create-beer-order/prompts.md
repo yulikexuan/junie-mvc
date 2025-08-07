@@ -1,4 +1,10 @@
 
+Hi Junie, could you please create a detailed enumerated task list according to the suggested enhancements plan in `/prompts/create-beer-order/plan.md`
+task items should have a placeholder [ ] for marking as done [x] upon task completion, 
+please also write the task list to `/prompts/create-beer-order/tasks.md` file.
+
+---
+
 Hi Junie, thank you for the plan.md file you made. 
 Could you also refine and improve the plan file `/prompts/create-beer-order/plan.md`
 to add the implementation details like source code, etc.? Thank you!
