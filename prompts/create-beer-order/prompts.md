@@ -1,3 +1,12 @@
+
+Hi Junie, thank you for the refined requirements. Could you do me a favor and revise the `/prompts/create-beer-order/requirements.md` file, and make command objects be java records instead of POJOs? Thank you!
+
+--- 
+
+Hi Junie, could you please help me analyze the file `/prompts/create-beer-order/requirements-draft.md`, and inspect the project, improve and rewrite the draft requirements to a new file called `/prompts/create-beer-order/requirements.md`? Thank you!
+
+---
+
 Analyze the attached ERD image named `BeerErd.png`, 
 and create detailed instructions for a Java developer to implement the relationships in JPA with Lombok.
 
