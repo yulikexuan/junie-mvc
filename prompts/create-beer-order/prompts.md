@@ -1,4 +1,8 @@
 
+Hi Junie, I made some changes in  `/prompts/create-beer-order/tasks.md` file to improve the numbers of items of tasks, for example, the number arragement for `Entity Implementation` chaned for `Update Bear Entity` and `Create Customer Entity`, coudl you please also do changes according what I have changed to improve the number arrangement for other task items?
+
+---
+
 Hi Junie, could you please create a detailed enumerated task list according to the suggested enhancements plan in `/prompts/create-beer-order/plan.md`
 task items should have a placeholder [ ] for marking as done [x] upon task completion, 
 please also write the task list to `/prompts/create-beer-order/tasks.md` file.
