@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,8 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "beer")
-public class Beer {
+@Table(name = "customer")
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,14 +25,9 @@ public class Beer {
     @Version
     private Integer version;
 
-    private String beerName;
-    private String beerStyle;
-
-    @Column(unique = true)
-    private String upc;
-
-    private Integer quantityOnHand;
-    private BigDecimal price;
+    private String name;
+    private String email;
+    private String phone;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -42,15 +36,8 @@ public class Beer {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
-    // One Beer can have many BeerInventory records
-    @OneToMany(mappedBy = "beer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @Builder.Default
     @ToString.Exclude
-    private Set<BeerInventory> inventories = new HashSet<>();
-
-    // One Beer can be in many OrderLines
-    @OneToMany(mappedBy = "beer")
-    @Builder.Default
-    @ToString.Exclude
-    private Set<BeerOrderLine> orderLines = new HashSet<>();
+    private Set<BeerOrder> beerOrders = new HashSet<>();
 }
