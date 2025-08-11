@@ -1,4 +1,17 @@
 
+
+Hi Junie, could you run all tests in the project and make sure all tests are passed?
+
+---
+
+Hi Junie, could you please add tests for all new controllers in package `spring.start.here.juniemvc.web.controller`, 
+all new mapper classes in package `spring.start.here.juniemvc.web.mappers`, 
+all new repositories in package `spring.start.here.juniemvc.repository`, 
+all new services in package `spring.start.here.juniemvc.service`; 
+Please also make sure all new added tests are pass.
+
+---
+
 Hi Junie, could you please complete the task-list `/prompts/create-beer-order/tasks.md`,
 inspect the `/prompts/create-beer-order/requirements.md`, `/prompts/create-beer-order/plan.md` and `/prompts/create-beer-order/task.md` which contains the task-list,
 then implement the tasks in the task-list,
