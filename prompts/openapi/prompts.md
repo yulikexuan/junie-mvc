@@ -6,3 +6,9 @@ and how components such as headers and schemas are defined in file references.
 Then, also update the file `.junie/guidelines.md` with a description of the API documentation,
 file naming conventions, and how components are defined;
 Provide instructions about testing the OpenAPI Specification using the command npm test.
+
+--- 
+
+Hi Junie, could you please inspect the Spring MVC Controller `spring.start.here.juniemvc.web.controller.BeerController` and comments on the DTOs accepted and returned;
+Update the OpenAPI Specification for the operations in the `BeerController`.
+Provide constraint information, descriptions and examples in the schema object.

@@ -1,0 +1,44 @@
+type: object
+title: BeerUpsertDto
+description: Payload to create or update a Beer resource.
+required:
+  - beerName
+  - beerStyle
+  - upc
+  - quantityOnHand
+  - price
+properties:
+  beerName:
+    type: string
+    description: Name of the beer.
+    minLength: 3
+    maxLength: 100
+    examples:
+      - "Galaxy Cat IPA"
+  beerStyle:
+    type: string
+    description: Style of the beer (e.g., ALE, PALE ALE, IPA, LAGER, STOUT).
+    minLength: 1
+    examples:
+      - IPA
+  upc:
+    type: string
+    description: Universal Product Code. 3 to 13 characters.
+    minLength: 3
+    maxLength: 13
+    examples:
+      - "0123456789012"
+  quantityOnHand:
+    type: integer
+    format: int32
+    description: Inventory quantity available.
+    minimum: 1
+    examples:
+      - 24
+  price:
+    type: number
+    format: double
+    description: Unit price of the beer.
+    exclusiveMinimum: 0
+    examples:
+      - 9.99

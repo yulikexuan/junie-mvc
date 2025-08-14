@@ -1,0 +1,65 @@
+parameters:
+  - name: beerId
+    in: path
+    description: Numeric identifier of the beer.
+    required: true
+    schema:
+      type: integer
+      format: int32
+get:
+  tags:
+    - Beer
+  summary: Get beer by id
+  description: Retrieve a beer by its identifier.
+  operationId: getBeerById
+  security: []
+  responses:
+    '200':
+      description: Beer found.
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/BeerDto.yaml'
+    '404':
+      description: Beer not found.
+      $ref: ../components/responses/Problem.yaml
+put:
+  tags:
+    - Beer
+  summary: Update beer by id
+  description: Update an existing beer.
+  operationId: updateBeer
+  security: []
+  requestBody:
+    required: true
+    description: Beer details to update.
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/BeerUpsertDto.yaml'
+  responses:
+    '200':
+      description: Beer updated.
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/BeerDto.yaml'
+    '400':
+      description: Validation error.
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Beer not found.
+      $ref: ../components/responses/Problem.yaml
+delete:
+  tags:
+    - Beer
+  summary: Delete beer by id
+  description: Delete a beer by its identifier.
+  operationId: deleteBeer
+  security: []
+  responses:
+    '204':
+      description: Beer deleted.
+    '404':
+      description: Beer not found.
+      $ref: ../components/responses/Problem.yaml

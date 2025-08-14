@@ -1,0 +1,72 @@
+type: object
+title: BeerDto
+description: Beer resource representation returned by the API.
+required:
+  - beerName
+  - beerStyle
+  - upc
+  - quantityOnHand
+  - price
+properties:
+  id:
+    type: integer
+    format: int32
+    description: Unique identifier of the beer.
+    readOnly: true
+    examples:
+      - 101
+  version:
+    type: integer
+    format: int32
+    description: Version for optimistic locking.
+    readOnly: true
+    examples:
+      - 1
+  beerName:
+    type: string
+    description: Name of the beer.
+    minLength: 3
+    maxLength: 100
+    examples:
+      - "Galaxy Cat IPA"
+  beerStyle:
+    type: string
+    description: Style of the beer (e.g., ALE, PALE ALE, IPA, LAGER, STOUT).
+    minLength: 1
+    examples:
+      - IPA
+  upc:
+    type: string
+    description: Universal Product Code. 3 to 13 characters.
+    minLength: 3
+    maxLength: 13
+    examples:
+      - "0123456789012"
+  quantityOnHand:
+    type: integer
+    format: int32
+    description: Inventory quantity available.
+    minimum: 1
+    examples:
+      - 24
+  price:
+    type: number
+    format: double
+    description: Unit price of the beer.
+    exclusiveMinimum: 0
+    examples:
+      - 9.99
+  createdDate:
+    type: string
+    format: date-time
+    description: Timestamp when the beer was created.
+    readOnly: true
+    examples:
+      - "2025-08-13T08:00:00Z"
+  updateDate:
+    type: string
+    format: date-time
+    description: Timestamp when the beer was last updated.
+    readOnly: true
+    examples:
+      - "2025-08-13T09:00:00Z"

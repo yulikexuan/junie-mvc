@@ -44,6 +44,8 @@ externalDocs:
   description: "Find out how to create a GitHub repo for your OpenAPI definition."
   url: 'https://github.com/Redocly/create-openapi-repo'
 tags:
+  - name: Beer
+    description: Beer catalog operations.
   - name: Echo
     description: "Example echo operations."
   - name: User
@@ -83,6 +85,10 @@ paths:
     $ref: paths/pathItemWithExamples.yaml
   '/echo':
     $ref: 'paths/echo.yaml'
+  '/beers':
+    $ref: 'paths/beers.yaml'
+  '/beers/{beerId}':
+    $ref: 'paths/beers_{beerId}.yaml'
 components:
   securitySchemes:
     main_auth:

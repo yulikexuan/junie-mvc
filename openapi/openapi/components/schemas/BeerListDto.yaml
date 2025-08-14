@@ -1,0 +1,44 @@
+type: object
+title: BeerListDto
+description: Paged list of beers with pagination metadata.
+required:
+  - beers
+  - totalPages
+  - currentPage
+  - totalElements
+properties:
+  beers:
+    type: array
+    description: Page content of beers.
+    items:
+      $ref: './BeerDto.yaml'
+    examples:
+      - - id: 101
+          beerName: "Galaxy Cat IPA"
+          beerStyle: IPA
+          upc: "0123456789012"
+          quantityOnHand: 24
+          price: 9.99
+          createdDate: "2025-08-13T08:00:00Z"
+          updateDate: "2025-08-13T09:00:00Z"
+  totalPages:
+    type: integer
+    format: int32
+    description: Total number of pages available.
+    minimum: 0
+    examples:
+      - 10
+  currentPage:
+    type: integer
+    format: int32
+    description: Current page index (0-based).
+    minimum: 0
+    examples:
+      - 0
+  totalElements:
+    type: integer
+    format: int64
+    description: Total number of elements across all pages.
+    minimum: 0
+    examples:
+      - 100
