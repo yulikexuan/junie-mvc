@@ -1,7 +1,7 @@
 package spring.start.here.juniemvc.web.model;
 
 
-import java.util.Set;
+import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,5 +16,5 @@ public record BeerOrderDto(
         String orderStatusCallbackUrl,
         @NotEmpty(message = "Beer order must have at least one beer order line")
         @Valid
-        Set<BeerOrderLineDto> orderLines
+        List<BeerOrderLineDto> orderLines
 ) {}

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.start.here.juniemvc.domain.model.Customer;
 import spring.start.here.juniemvc.repository.CustomerRepository;
+import spring.start.here.juniemvc.web.exception.CustomerNotFoundException;
 import spring.start.here.juniemvc.web.mappers.CustomerMapper;
 import spring.start.here.juniemvc.web.model.CustomerDto;
 import spring.start.here.juniemvc.web.model.CustomerUpsertDto;
@@ -45,12 +46,15 @@ class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public Optional<CustomerDto> update(Integer id, CustomerUpsertDto upsertDto) {
-        return customerRepository.findById(id).map(existing -> {
-            existing.setName(upsertDto.name());
-            existing.setEmail(upsertDto.email());
-            existing.setPhone(upsertDto.phone());
-            return customerMapper.toDto(customerRepository.save(existing));
-        });
+        Customer existing = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException(id));
+
+        existing.setName(upsertDto.name());
+        existing.setEmail(upsertDto.email());
+        existing.setPhone(upsertDto.phone());
+
+        Customer saved = customerRepository.save(existing);
+        return Optional.of(customerMapper.toDto(saved));
     }
 
     @Override

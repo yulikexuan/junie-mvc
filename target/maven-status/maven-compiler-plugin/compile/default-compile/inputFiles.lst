@@ -22,6 +22,7 @@ C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\controlle
 C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\controller\BeerInventoryController.java
 C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\controller\BeerOrderController.java
 C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\controller\CustomerController.java
+C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\exception\CustomerNotFoundException.java
 C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\exception\GlobalExceptionHandler.java
 C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\mappers\BeerInventoryMapper.java
 C:\dev\projects\junie-mvc\src\main\java\spring\start\here\juniemvc\web\mappers\BeerMapper.java

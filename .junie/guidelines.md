@@ -209,6 +209,11 @@ logger.atDebug()
   - Baseline an existing schema: `spring.flyway.baseline-on-migrate=true`
   - Cleaning is disabled by default for safety in Spring Boot. If needed locally: `spring.flyway.clean-disabled=false` (use with care)
 
+* Use H2 compliant SQL syntax for database migrations.
+
+* When altering tables to add a property with a foreign key constraint, 
+  add the new column first and then add the foreign key constraint in a second SQL statement.
+
 For more, see Flyway docs: https://flywaydb.org/documentation/ and Spring Boot Flyway docs: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto.data-initialization. 
 
 ### Benefits of using Flyway with Spring Boot
@@ -222,7 +227,27 @@ For more, see Flyway docs: https://flywaydb.org/documentation/ and Spring Boot F
 * Improves team collaboration: Clear conventions and small, incremental scripts reduce merge conflicts and make onboarding new developers straightforward.
 * Enables forward-only, low-downtime strategies: Encourages incremental, backward-compatible schema evolution patterns that work well with blue/green or rolling deploys.
 
-## 16. OpenAPI Specification (API Documentation)
+
+## 16. Use Project Lombok
+* Use Lombok to reduce boilerplate code.
+* Enable annotation processing for your IDE to generate boilerplate code for you.
+* When adding builder to a class, if the class extends another class, add `@SuperBuilder` for the builder.
+
+
+## 17. Use Mapstruct for Type Conversions
+* Use Mapstruct to convert between domain objects and DTOs.
+* Use `@Mapper` to configure the mapping between the two classes.
+* Use `@Mapping` to configure the mapping between the two fields.
+* After modifying a Mapper, recompile the project to generate the new Mapper implementation.
+* Use Mappers to update existing entities.
+
+
+## 18. Service Operations
+* When updating existing entities, use Mappers to update existing entities. 
+* The entity should be fetched from the database, and then updated using the mapper before saving the entity back to the database.
+
+
+## 19. OpenAPI Specification (API Documentation)
 * Location: The API documentation lives under `openapi\openapi`. The root definition is `openapi\openapi\openapi.yaml`.
 * Tooling: We use Redocly CLI for preview, bundling, and linting.
   - `openapi\package.json` scripts:
@@ -230,7 +255,7 @@ For more, see Flyway docs: https://flywaydb.org/documentation/ and Spring Boot F
     - `build`: `redocly bundle -o dist/bundle.yaml`
     - `test`: `redocly lint`
 
-### 16.1. Structure and file references
+### 19.1. Structure and file references
 * Root spec (`openapi.yaml`) references path items under `paths/` and components under `components/` using `$ref`.
 * Example path references from `paths` section in the root spec:
   - `'/users/{username}': $ref: 'paths/users_{username}.yaml'`
@@ -242,7 +267,7 @@ For more, see Flyway docs: https://flywaydb.org/documentation/ and Spring Boot F
   - Headers: `$ref: '../components/headers/ExpiresAfter.yaml'`
   - Responses: `$ref: '../components/responses/Problem.yaml'`
 
-### 16.2. File naming conventions
+### 19.2. File naming conventions
 * Path operations (files under `openapi\openapi\paths`):
   - Prefer mapping from the URL path to a filename by:
     - Removing the leading slash (/),
@@ -259,7 +284,7 @@ For more, see Flyway docs: https://flywaydb.org/documentation/ and Spring Boot F
   - Responses go in `components\responses\*.yaml`, e.g. `Problem.yaml`.
   - Security schemes are defined inline in the root spec under `components.securitySchemes` (not split into files in this project).
 
-### 16.3. Defining and using components
+### 19.3. Defining and using components
 * Schemas: Define each schema as its own YAML file and reference with `$ref` from requests/responses.
   - Example: `schema: { $ref: '../components/schemas/User.yaml' }`.
 * Headers: Define reusable headers as files and reference them from responses.
@@ -268,7 +293,7 @@ For more, see Flyway docs: https://flywaydb.org/documentation/ and Spring Boot F
   - Example: `'400': { $ref: '../components/responses/Problem.yaml' }`.
 * Webhooks: May also reference shared schemas from the same `components/schemas` folder.
 
-### 16.4. How to validate/test the OpenAPI specification
+### 19.4. How to validate/test the OpenAPI specification
 To lint/validate the OpenAPI definition with Redocly:
 1. Ensure Node.js is installed (v16+ recommended).
 2. Open a terminal and change directory to the `openapi` folder:
