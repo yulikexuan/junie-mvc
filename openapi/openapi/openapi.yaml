@@ -46,6 +46,8 @@ externalDocs:
 tags:
   - name: Beer
     description: Beer catalog operations.
+  - name: Beer Orders
+    description: Operations related to beer orders.
   - name: Echo
     description: "Example echo operations."
   - name: User
@@ -89,6 +91,14 @@ paths:
     $ref: 'paths/beers.yaml'
   '/beers/{beerId}':
     $ref: 'paths/beers_{beerId}.yaml'
+  '/beer-orders':
+    $ref: 'paths/beer-orders.yaml'
+  '/beer-orders/{orderId}':
+    $ref: 'paths/beer-orders_{orderId}.yaml'
+  '/beer-orders/customer/{customerId}':
+    $ref: 'paths/beer-orders_customer_{customerId}.yaml'
+  '/beer-orders/{orderId}/status':
+    $ref: 'paths/beer-orders_{orderId}_status.yaml'
 components:
   securitySchemes:
     main_auth:

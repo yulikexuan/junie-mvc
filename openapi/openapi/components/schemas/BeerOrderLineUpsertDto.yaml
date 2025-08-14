@@ -1,0 +1,19 @@
+type: object
+title: BeerOrderLineUpsertDto
+description: Line item payload for creating a beer order.
+required:
+  - beerId
+  - orderQuantity
+properties:
+  beerId:
+    type: integer
+    format: int32
+    description: Identifier of the beer to order.
+    minimum: 1
+    examples: [ 10 ]
+  orderQuantity:
+    type: integer
+    format: int32
+    description: Quantity to order (must be positive).
+    minimum: 1
+    examples: [ 2 ]

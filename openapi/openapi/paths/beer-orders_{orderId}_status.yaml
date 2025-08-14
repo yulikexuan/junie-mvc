@@ -1,0 +1,33 @@
+put:
+  tags: [ Beer Orders ]
+  summary: Update beer order status
+  description: Update the status of a beer order.
+  operationId: updateBeerOrderStatus
+  security: []
+  parameters:
+    - name: orderId
+      in: path
+      required: true
+      description: Identifier of the beer order.
+      schema:
+        type: integer
+        format: int32
+      example: 500
+    - name: orderStatus
+      in: query
+      required: true
+      description: New status to set.
+      schema:
+        type: string
+        enum: [ NEW, PAID, CANCELLED, INPROCESS, COMPLETE ]
+      example: PAID
+  responses:
+    '200':
+      description: Beer order status updated.
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/BeerOrderDto.yaml'
+    '404':
+      description: Beer order not found.
+      $ref: ../components/responses/Problem.yaml

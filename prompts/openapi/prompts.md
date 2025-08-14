@@ -12,3 +12,11 @@ Provide instructions about testing the OpenAPI Specification using the command n
 Hi Junie, could you please inspect the Spring MVC Controller `spring.start.here.juniemvc.web.controller.BeerController` and comments on the DTOs accepted and returned;
 Update the OpenAPI Specification for the operations in the `BeerController`.
 Provide constraint information, descriptions and examples in the schema object.
+
+--- 
+
+Hi Junie, could you please inspect the Spring MVC Controller `spring.start.here.juniemvc.web.controller.BeerOrderController` and comments on the DTOs accepted and returned;
+Update the OpenAPI Specification for the operations in the `spring.start.here.juniemvc.web.controller.BeerOrderController`.
+Provide constraint information, descriptions and examples in the schema object;
+Also remember to run the tests defined in `openapi/package.json` using the command npm test to validate your job.
+

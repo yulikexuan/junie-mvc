@@ -1,0 +1,46 @@
+get:
+  tags: [ Beer Orders ]
+  summary: Get beer order by id
+  description: Retrieve a beer order by its identifier.
+  operationId: getBeerOrderById
+  security: []
+  parameters:
+    - name: orderId
+      in: path
+      required: true
+      description: Identifier of the beer order.
+      schema:
+        type: integer
+        format: int32
+      example: 500
+  responses:
+    '200':
+      description: Beer order found.
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/BeerOrderDto.yaml'
+    '404':
+      description: Beer order not found.
+      $ref: ../components/responses/Problem.yaml
+delete:
+  tags: [ Beer Orders ]
+  summary: Delete beer order
+  description: Delete a beer order by id.
+  operationId: deleteBeerOrder
+  security: []
+  parameters:
+    - name: orderId
+      in: path
+      required: true
+      description: Identifier of the beer order.
+      schema:
+        type: integer
+        format: int32
+      example: 500
+  responses:
+    '204':
+      description: Beer order deleted.
+    '404':
+      description: Beer order not found.
+      $ref: ../components/responses/Problem.yaml

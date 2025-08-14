@@ -1,0 +1,46 @@
+type: object
+title: BeerOrderDto
+description: Beer order resource representation returned by the API.
+properties:
+  id:
+    type: integer
+    format: int32
+    description: Unique identifier of the beer order.
+    readOnly: true
+    examples: [ 500 ]
+  version:
+    type: integer
+    format: int32
+    description: Version for optimistic locking.
+    readOnly: true
+    examples: [ 1 ]
+  customerId:
+    type: integer
+    format: int32
+    description: Identifier of the customer placing the order.
+    minimum: 1
+    examples: [ 42 ]
+  customerRef:
+    type: string
+    description: Optional reference information provided by the customer (e.g., PO number).
+    maxLength: 100
+    examples: [ "PO-2025-0001" ]
+  orderStatus:
+    type: string
+    description: Current status of the order.
+    enum: [ NEW, PAID, CANCELLED, INPROCESS, COMPLETE ]
+    examples: [ NEW ]
+  orderStatusCallbackUrl:
+    type: string
+    description: Optional callback URL to receive order status updates.
+    maxLength: 255
+    examples: [ "https://acme.example.com/hooks/order-status" ]
+  orderLines:
+    type: array
+    description: Collection of beer order lines. Must contain at least one item.
+    minItems: 1
+    items:
+      $ref: './BeerOrderLineDto.yaml'
+required:
+  - customerId
+  - orderLines

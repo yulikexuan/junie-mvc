@@ -1,0 +1,31 @@
+type: object
+title: BeerOrderUpsertDto
+description: Payload to create a new beer order.
+required:
+  - customerId
+  - customerRef
+  - orderLines
+properties:
+  customerId:
+    type: integer
+    format: int32
+    description: Identifier of the customer placing the order.
+    minimum: 1
+    examples: [ 42 ]
+  customerRef:
+    type: string
+    description: Reference information from customer (e.g., PO number).
+    minLength: 1
+    maxLength: 100
+    examples: [ "PO-2025-0001" ]
+  orderStatusCallbackUrl:
+    type: string
+    description: Optional callback URL to receive order status updates.
+    maxLength: 255
+    examples: [ "https://acme.example.com/hooks/order-status" ]
+  orderLines:
+    type: array
+    description: List of line items to order. Must contain at least one item.
+    minItems: 1
+    items:
+      $ref: './BeerOrderLineUpsertDto.yaml'
